@@ -27,9 +27,25 @@ def read_health():
 
 @app.post("/compile")
 def compile_code(request: CompileRequest):
-    # Stub response for now
+    from lexer import get_lexer
+    
+    lexer = get_lexer()
+    lexer.input(request.source_code)
+    
+    tokens = []
+    while True:
+        tok = lexer.token()
+        if not tok:
+            break
+        tokens.append({
+            "type": tok.type,
+            "value": tok.value,
+            "lineno": tok.lineno,
+            "lexpos": tok.lexpos
+        })
+        
     return {
-        "tokens": [],
+        "tokens": tokens,
         "ast": {},
         "symbol_table": [],
         "semantic_errors": [],
